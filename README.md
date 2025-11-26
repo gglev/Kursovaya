@@ -23,4 +23,16 @@ StegoLab — это профессиональное desktop-приложени�
 ---
 
 ## 🏗️ Структура проекта
-
+steganography-tool/
+├── 📁 src/
+│ ├── main.py # 🎯 Точка входа в приложение
+│ ├── steganography.py # 🔧 Основной класс стеганографии
+│ ├── image_processor.py # 🖼️ Обработчик изображений
+│ ├── lsb_algorithm.py # ⚡ Реализация LSB-алгоритма
+│ └── interface.py # 🎨 Графический интерфейс
+├── 📁 tests/ # 🧪 Модульные тесты
+│ ├── test_steganography.py
+│ └── test_image_processor.py
+├── 📁 examples/ # 📚 Примеры использования
+├── requirements.txt # 📦 Зависимости проекта
+└── README.md # 📖 Документация
