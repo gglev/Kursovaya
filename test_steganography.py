@@ -70,50 +70,59 @@ class TestSteganographyBasic:
             if os.path.exists(output_path):
                 os.unlink(output_path)
     
-    def test_2_message_exceeds_capacity(self):
-        """Тест 2: Негативный тест - превышение вместимости изображения"""
-        # Создаем очень большое сообщение, которое точно не поместится
-        huge_message = "X" * 10000
+    def test_2_message_automatic_truncation(self):
+        """Тест 2: Проверка автоматической обрезки длинного сообщения"""
+        # Создаем очень большое сообщение
+        huge_message = "X" * 5000  # 5000 символов
         
         output_path = tempfile.NamedTemporaryFile(suffix='.png', delete=False).name
         
         try:
-            # Проверяем что встраивание слишком длинного сообщения вызывает ошибку
-            with pytest.raises(ValueError) as exc_info:
-                self.stego.embed_message(
-                    self.test_image_path, 
-                    huge_message, 
-                    output_path
-                )
+            # Рассчитываем максимальную вместимость
+            self.stego.image_processor.load_image(self.test_image_path)
+            pixels = self.stego.image_processor.get_pixels()
+            max_chars = self.stego.calculate_capacity(pixels)
             
-            # Проверяем текст ошибки
-            error_message = str(exc_info.value).lower()
-            assert any(keyword in error_message for keyword in ['слишком', 'длинное', 'вместимость', 'емкость']), \
-                f"Неправильное сообщение об ошибке: {error_message}"
+            # Встраивание сообщения (должно автоматически обрезаться)
+            success = self.stego.embed_message(
+                self.test_image_path, 
+                huge_message, 
+                output_path
+            )
             
-            print(f" Тест 2 пройден: корректная обработка слишком длинного сообщения")
+            # Проверка успешности встраивания
+            assert success == True, "Встраивание сообщения не удалось"
+            assert os.path.exists(output_path), "Выходной файл не создан"
+            
+            # Извлечение сообщения
+            extracted_message = self.stego.extract_message(output_path)
+            
+            # Проверка что сообщение было обрезано
+            assert len(extracted_message) == max_chars, f"Сообщение не было обрезано. Длина: {len(extracted_message)}, ожидалось: {max_chars}"
+            
+            # Проверка что первые N символов сохранены
+            assert extracted_message == huge_message[:max_chars], "Сообщение было обрезано некорректно"
+            
+            print(f" Тест 2 пройден: сообщение автоматически обрезано с {len(huge_message)} до {len(extracted_message)} символов")
             
         finally:
             if os.path.exists(output_path):
                 os.unlink(output_path)
     
     def test_3_extract_from_clean_image(self):
-        """Тест 3: Негативный тест - извлечение из изображения без сообщения"""
+        """Тест 3: Извлечение из изображения без сообщения"""
         # Создаем новое чистое изображение без встроенного сообщения
         clean_image_path = tempfile.NamedTemporaryFile(suffix='.png', delete=False).name
         self.create_test_image(clean_image_path, size=(50, 50))
         
         try:
-            # Проверяем что извлечение из чистого изображения вызывает ошибку
-            with pytest.raises(ValueError) as exc_info:
-                self.stego.extract_message(clean_image_path)
+            # Извлекаем сообщение из чистого изображения
+            result = self.stego.extract_message(clean_image_path)
             
-            # Проверяем текст ошибки
-            error_message = str(exc_info.value).lower()
-            assert any(keyword in error_message for keyword in ['не найдено', 'повреждено', 'сообщение', 'нет']), \
-                f"Неправильное сообщение об ошибке: {error_message}"
+            # Ожидаем пустую строку для чистого изображения
+            assert result == "", f"Ожидалась пустая строка, получено: '{result}'"
             
-            print(f" Тест 3 пройден: корректная обработка чистого изображения")
+            print(f" Тест 3 пройден: из чистого изображения извлечена пустая строка")
             
         finally:
             if os.path.exists(clean_image_path):
@@ -150,7 +159,7 @@ class TestSteganographyBasic:
             assert extracted_message == test_message, \
                 f"Ошибка при {bits_per_channel} битах: ожидалось '{test_message}', получено '{extracted_message}'"
             
-            print(f" Тест 4 пройден для {bits_per_channel} бит(а) на канал")
+            print(f"✅ Тест 4 пройден для {bits_per_channel} бит(а) на канал")
             
         finally:
             if os.path.exists(output_path):
@@ -160,7 +169,7 @@ class TestSteganographyBasic:
 if __name__ == "__main__":
     # Запуск тестов с детальным выводом
     print("=" * 60)
-    print("Запуск тестов системы стеганографии")
+    print("Запуск тестов системы стеганографии (автоматическая обрезка)")
     print("=" * 60)
     
     # Создаем экземпляр тестового класса
@@ -170,16 +179,16 @@ if __name__ == "__main__":
         # Запускаем каждый тест по очереди
         test_class.setup_method()
         
-        print("\n Тест 1: Базовое встраивание и извлечение")
+        print("\nТест 1: Базовое встраивание и извлечение")
         test_class.test_1_basic_embed_and_extract()
         
-        print("\n Тест 2: Превышение вместимости изображения")
-        test_class.test_2_message_exceeds_capacity()
+        print("\nТест 2: Автоматическая обрезка длинного сообщения")
+        test_class.test_2_message_automatic_truncation()
         
-        print("\n Тест 3: Извлечение из чистого изображения")
+        print("\nТест 3: Извлечение из чистого изображения")
         test_class.test_3_extract_from_clean_image()
         
-        print("\n Тест 4: Разное количество бит на канал")
+        print("\nТест 4: Разное количество бит на канал")
         
         # Запускаем параметризованный тест для каждого набора параметров
         test_params = [
@@ -193,11 +202,13 @@ if __name__ == "__main__":
             test_class.test_4_different_bits_per_channel(bits, message)
         
         print("\n" + "=" * 60)
-        print(" Все тесты успешно пройдены!")
+        print("✅ Все тесты успешно пройдены!")
         print("=" * 60)
         
     except Exception as e:
         print(f"\n Ошибка при выполнении тестов: {e}")
+        import traceback
+        traceback.print_exc()
         raise
     finally:
         test_class.teardown_method()
