@@ -95,7 +95,7 @@ class ModernSteganographyGUI:
                              highlightbackground=self.get_color('border'), highlightthickness=1)
         image_card.pack(fill='x', pady=(0, 15))
         
-        tk.Label(image_card, text="📸 ИСХОДНОЕ ИЗОБРАЖЕНИЕ", bg=self.get_color('card_bg'),
+        tk.Label(image_card, text=" ИСХОДНОЕ ИЗОБРАЖЕНИЕ", bg=self.get_color('card_bg'),
                 fg=self.get_color('text_primary'), font=('SF Pro Display', 12, 'bold')).pack(anchor='w', padx=20, pady=(20, 10))
         
         content_frame = tk.Frame(image_card, bg=self.get_color('card_bg'))
@@ -130,7 +130,7 @@ class ModernSteganographyGUI:
                                 highlightbackground=self.get_color('border'), highlightthickness=1)
         password_card.pack(fill='x', pady=(0, 15))
         
-        tk.Label(password_card, text="🔐 НАСТРОЙКИ БЕЗОПАСНОСТИ", bg=self.get_color('card_bg'),
+        tk.Label(password_card, text=" НАСТРОЙКИ БЕЗОПАСНОСТИ", bg=self.get_color('card_bg'),
                 fg=self.get_color('text_primary'), font=('SF Pro Display', 12, 'bold')).pack(anchor='w', padx=20, pady=(20, 10))
         
         content_frame = tk.Frame(password_card, bg=self.get_color('card_bg'))
@@ -182,7 +182,7 @@ class ModernSteganographyGUI:
                                highlightbackground=self.get_color('border'), highlightthickness=1)
         control_card.pack(fill='x', pady=(0, 15))
         
-        tk.Label(control_card, text="⚙️ ДЕЙСТВИЯ", bg=self.get_color('card_bg'),
+        tk.Label(control_card, text=" ДЕЙСТВИЯ", bg=self.get_color('card_bg'),
                 fg=self.get_color('text_primary'), font=('SF Pro Display', 12, 'bold')).pack(anchor='w', padx=20, pady=(20, 10))
         
         content_frame = tk.Frame(control_card, bg=self.get_color('card_bg'))
@@ -192,12 +192,12 @@ class ModernSteganographyGUI:
         btn_frame = tk.Frame(content_frame, bg=self.get_color('card_bg'))
         btn_frame.pack(fill='x', pady=10)
         
-        embed_btn = tk.Button(btn_frame, text="🔼 ВСТРОИТЬ СООБЩЕНИЕ", command=self.embed_message,
+        embed_btn = tk.Button(btn_frame, text=" ВСТРОИТЬ СООБЩЕНИЕ", command=self.embed_message,
                              bg=self.get_color('accent'), fg='white', font=('SF Pro Display', 11, 'bold'),
                              border=0, relief='flat', cursor='hand2', padx=20, pady=12)
         embed_btn.pack(side='left', fill='x', expand=True, padx=(0, 10))
         
-        extract_btn = tk.Button(btn_frame, text="🔽 ИЗВЛЕЧЬ СООБЩЕНИЕ", command=self.extract_message,
+        extract_btn = tk.Button(btn_frame, text=" ИЗВЛЕЧЬ СООБЩЕНИЕ", command=self.extract_message,
                                bg=self.get_color('accent'), fg='white', font=('SF Pro Display', 11, 'bold'),
                                border=0, relief='flat', cursor='hand2', padx=20, pady=12)
         extract_btn.pack(side='left', fill='x', expand=True, padx=10)
@@ -213,7 +213,7 @@ class ModernSteganographyGUI:
                             highlightbackground=self.get_color('border'), highlightthickness=1)
         info_card.pack(fill='x', pady=(0, 15))
         
-        tk.Label(info_card, text="📊 ИНФОРМАЦИЯ О ИЗОБРАЖЕНИИ", bg=self.get_color('card_bg'),
+        tk.Label(info_card, text=" ИНФОРМАЦИЯ О ИЗОБРАЖЕНИИ", bg=self.get_color('card_bg'),
                 fg=self.get_color('text_primary'), font=('SF Pro Display', 12, 'bold')).pack(anchor='w', padx=20, pady=(20, 10))
         
         content_frame = tk.Frame(info_card, bg=self.get_color('card_bg'))
@@ -230,7 +230,7 @@ class ModernSteganographyGUI:
                                highlightbackground=self.get_color('border'), highlightthickness=1)
         message_card.pack(fill='both', expand=True, pady=(0, 15))
         
-        tk.Label(message_card, text="💬 ВВОД СООБЩЕНИЯ", bg=self.get_color('card_bg'),
+        tk.Label(message_card, text=" ВВОД СООБЩЕНИЯ", bg=self.get_color('card_bg'),
                 fg=self.get_color('text_primary'), font=('SF Pro Display', 12, 'bold')).pack(anchor='w', padx=20, pady=(20, 10))
         
         content_frame = tk.Frame(message_card, bg=self.get_color('card_bg'))
@@ -261,7 +261,7 @@ class ModernSteganographyGUI:
                               highlightbackground=self.get_color('border'), highlightthickness=1)
         result_card.pack(fill='both', expand=True)
         
-        tk.Label(result_card, text="📋 РЕЗУЛЬТАТ", bg=self.get_color('card_bg'),
+        tk.Label(result_card, text=" РЕЗУЛЬТАТ", bg=self.get_color('card_bg'),
                 fg=self.get_color('text_primary'), font=('SF Pro Display', 12, 'bold')).pack(anchor='w', padx=20, pady=(20, 10))
         
         result_content = tk.Frame(result_card, bg=self.get_color('card_bg'))
@@ -322,7 +322,7 @@ class ModernSteganographyGUI:
             self.capacity_label.config(text=info_text)
             
         except Exception as e:
-            self.capacity_label.config(text=f"❌ Ошибка: {str(e)}")
+            self.capacity_label.config(text=f"Ошибка: {str(e)}")
     
     def update_char_count(self, event=None):
         text = self.text_input.get("1.0", tk.END).strip()
@@ -362,23 +362,23 @@ class ModernSteganographyGUI:
             )
             
             if output_path:
-                self.show_result("⏳ Встраивание сообщения с шифрованием...")
+                self.show_result(" Встраивание сообщения с шифрованием...")
                 self.root.update()
                 
                 success = self.steganography.embed_message(image_path, text, output_path, password)
                 if success:
-                    info_text = (f"✅ Сообщение успешно встроено!\n\n"
-                               f"▫️ Файл: {output_path}\n"
-                               f"▫️ Размер: {self.steganography.image_processor.size}\n"
-                               f"▫️ Шифрование: {'AES-256' if password else 'нет'}\n"
-                               f"▫️ Использовано: {len(text)} символов\n"
-                               f"▫️ Проверка целостности: ✅ включена")
+                    info_text = (f" Сообщение успешно встроено!\n\n"
+                               f" Файл: {output_path}\n"
+                               f" Размер: {self.steganography.image_processor.size}\n"
+                               f" Шифрование: {'AES-256' if password else 'нет'}\n"
+                               f" Использовано: {len(text)} символов\n"
+                               f" Проверка целостности: включена")
                     
                     self.show_result(info_text)
-                    messagebox.showinfo("Успех", "✅ Сообщение успешно встроено и защищено!")
+                    messagebox.showinfo("Успех", " Сообщение успешно встроено и защищено!")
                 
         except Exception as e:
-            error_msg = f"❌ Ошибка при встраивании:\n{str(e)}"
+            error_msg = f" Ошибка при встраивании:\n{str(e)}"
             self.show_result(error_msg)
             messagebox.showerror("Ошибка", error_msg)
     
@@ -396,26 +396,26 @@ class ModernSteganographyGUI:
                 password = simpledialog.askstring("Ввод пароля", 
                                                  "Введите пароль для расшифровки:", show='*')
             
-            self.show_result("⏳ Извлечение и проверка сообщения...")
+            self.show_result(" Извлечение и проверка сообщения...")
             self.root.update()
             
             text = self.steganography.extract_message(image_path, password)
             
             if text:
-                info_text = (f"✅ Сообщение успешно извлечено!\n\n"
-                           f"▫️ Проверка целостности: ✅ пройдена\n"
-                           f"▫️ Шифрование: {'AES-256' if password else 'нет'}\n"
-                           f"▫️ Длина: {len(text)} символов\n\n"
-                           f"📝 Текст:\n{'─'*40}\n{text}\n{'─'*40}")
+                info_text = (f" Сообщение успешно извлечено!\n\n"
+                           f" Проверка целостности:  пройдена\n"
+                           f" Шифрование: {'AES-256' if password else 'нет'}\n"
+                           f" Длина: {len(text)} символов\n\n"
+                           f" Текст:\n{'─'*40}\n{text}\n{'─'*40}")
                 
                 self.show_result(info_text)
-                messagebox.showinfo("Результат", f"✅ Сообщение извлечено!\n\n{text}")
+                messagebox.showinfo("Результат", f" Сообщение извлечено!\n\n{text}")
             else:
-                self.show_result("❌ Сообщение не найдено или пароль неверен")
+                self.show_result(" Сообщение не найдено или пароль неверен")
                 messagebox.showwarning("Результат", "Сообщение не найдено. Возможно, неверный пароль или изображение повреждено.")
             
         except Exception as e:
-            error_msg = f"❌ Ошибка при извлечении:\n{str(e)}"
+            error_msg = f" Ошибка при извлечении:\n{str(e)}"
             self.show_result(error_msg)
             messagebox.showerror("Ошибка", error_msg)
     

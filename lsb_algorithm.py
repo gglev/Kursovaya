@@ -25,8 +25,7 @@ class LSBAlgorithm:
             
             # Шифруем сообщение
             ct_bytes = cipher.encrypt(pad(text.encode('utf-8'), AES.block_size))
-            
-            # Возвращаем: [СОЛЬ(16)][IV(16)][ШИФРТЕКСТ]
+
             return salt + iv + ct_bytes
         except Exception as e:
             raise ValueError(f"Ошибка шифрования: {str(e)}")
